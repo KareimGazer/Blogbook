@@ -28,8 +28,8 @@ app.use(express.json())
 app.use('/info', statusRouter)
 // app.use('/api/blogs', blogsRouter)
 
-// app.use(middleware.unknownEndPoint)
-// app.use(middleware.castErrorHandler)
-// app.use(middleware.validationErrorHandler)
+app.use(middleware.unknownEndPoint)
+app.use(middleware.castErrorHandler)
+app.use(middleware.validationErrorHandler)
 
 module.exports = app
