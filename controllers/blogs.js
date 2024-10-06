@@ -1,5 +1,4 @@
 const router = require('express').Router()
-const { response } = require('../app')
 const Blog = require('../models/blog')
 
 router.get('/', async (req, res, next) => {
@@ -18,7 +17,7 @@ router.get('/:id', async (req, res, next) => {
         const blog = Blog.findById(id)
         if (!blog) {
             res.statusMessage = `Blog with id ${id} not found`
-            response.status(404).end()
+            res.status(404).end()
         }
         else {
             res.status(200).json(blog)
