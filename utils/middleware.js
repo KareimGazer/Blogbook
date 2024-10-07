@@ -11,20 +11,18 @@ const unknownEndPoint = (req, res) => {
 const castErrorHandler = (error, request, response, next) => {
     logger.error(error.message)
     if (error.name === 'CastError') {
-        res.statusMessage = "Malformatted ID"
+        response.statusMessage = "Malformatted ID"
         return response.status(400).send({ error:  error.message})
     } 
-
     next(error)
 }
 
 const validationErrorHandler = (error, request, response, next) => {
     logger.error(error.message)
     if (error.name === 'ValidationError') {
-        res.statusMessage = "Invalid Data"
+        response.statusMessage = "Invalid Data"
         return response.status(400).send({ error: error.message })
-    } 
-
+    }
     next(error)
 }
 

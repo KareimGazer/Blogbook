@@ -1,7 +1,7 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const { totalLikes } = require('../utils/list_helper')
-const { dummy_blogs } = require('./data')
+const initialBlogs  = require('./data')
 
 describe('total likes', () => {
 
@@ -22,7 +22,7 @@ describe('total likes', () => {
     })
         
     test('when list has many blogs, equals the likes of that', () => {
-        const result = totalLikes(dummy_blogs)
+        const result = totalLikes(initialBlogs)
         assert.strictEqual(result, 36)
     })
 

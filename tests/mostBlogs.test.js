@@ -1,7 +1,7 @@
 const {test, describe} = require('node:test')
 const assert = require('node:assert')
 const { mostBlogs } = require('../utils/list_helper')
-const { dummy_blogs } = require('./data')
+const initialBlogs = require('./data')
 
 describe('most blogs', () => {
     test('when list has only one blog, it is the author of that', () => {
@@ -20,7 +20,7 @@ describe('most blogs', () => {
     })
 
     test('when list has many blogs, it returns the author with most', () => {
-        const result = mostBlogs(dummy_blogs)
+        const result = mostBlogs(initialBlogs)
         assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 3 })
     })
 
