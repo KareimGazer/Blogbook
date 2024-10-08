@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
     const { id } = req.params
-    const blog = Blog.findById(id)
+    const blog = await Blog.findById(id)
     if (!blog) {
         res.statusMessage = `Blog with id ${id} not found`
         res.status(404).end()
@@ -32,7 +32,7 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
     const { id } = req.params
-    const blog = await Plog.findByIdAndDelete(id, { new: true })
+    const blog = await Blog.findByIdAndDelete(id, { new: true })
     res.status(204).end()
 })
 

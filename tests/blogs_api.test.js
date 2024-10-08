@@ -7,6 +7,7 @@ const {initialBlogs, nonExistingId, blogsInDb} = require('./test_helper')
 const app = require('../app')
 
 const api = supertest(app)
+const BASE_URL = '/api/blogs'
 
 beforeEach(async () => {
   try {
@@ -76,6 +77,56 @@ test('Blog without a title is not added', async () => {
   const blogsAtEnd = await blogsInDb()
 
   assert.strictEqual(blogsAtEnd.length, initialBlogs.length) // remember the before each
+})
+
+test('Blog with no like defualts to zero', async () => {
+  const newBlog = {
+    title: "The Best of the best",
+    author: "Kisho Tata",
+    url: "http://kisho.com",
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await blogsInDb()
+  assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+})
+
+test('ID is id not _id', async () => {
+  const blogs = await blogsInDb()
+  const blog = blogs[0]
+  assert('id' in blog)
+  assert(!('_id' in blog))
+})
+
+test('a specific blog can be viewed', async () => {
+  const blogsAtStart = await blogsInDb()
+  const blogToView = blogsAtStart[0]
+  const resultBlog = await api
+    .get(`${BASE_URL}/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.deepStrictEqual(resultBlog.body, blogToView)
+})
+
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`${BASE_URL}/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await blogsInDb()
+  const titles = blogsAtEnd.map(r => r.title)
+  assert(!titles.includes(blogToDelete.title))
+
+  assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1)
 })
 
 after(async () => {
