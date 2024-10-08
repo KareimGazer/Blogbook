@@ -1,6 +1,10 @@
 const { PORT, MONGODB_URI } = require('./utils/config')
 
 const express = require('express')
+// If an exception occurs in an async route,
+// the execution is automatically passed to the error - handling middleware.
+// import before the routes
+require('express-async-errors')
 const app = express()
 
 const cors = require('cors')
