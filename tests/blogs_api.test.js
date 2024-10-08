@@ -79,6 +79,23 @@ test('Blog without a title is not added', async () => {
   assert.strictEqual(blogsAtEnd.length, initialBlogs.length) // remember the before each
 })
 
+test('Blog without an URL is not added', async () => {
+  const newBlog = {
+    author: "Kisho Tata",
+    title: "The special one",
+    likes: 7,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsAtEnd = await blogsInDb()
+
+  assert.strictEqual(blogsAtEnd.length, initialBlogs.length) // remember the before each
+})
+
 test('Blog with no like defualts to zero', async () => {
   const newBlog = {
     title: "The Best of the best",
