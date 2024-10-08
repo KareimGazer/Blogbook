@@ -183,7 +183,6 @@ describe('when there is initially some blogs saved', () => {
         .expect(200)
 
       const blogsAtEnd = await blogsInDb()
-
       assert.strictEqual(blogsAtEnd[0].likes, updatedBlog.likes)
     })
 
