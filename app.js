@@ -27,7 +27,10 @@ mongoose.connect(MONGODB_URI)
 app.use(cors())
 // app.use(express.static('dist'))
 app.use(express.json())
-app.use(middleware.requestLogger)
+
+if (process.env.NODE_ENV !== 'test') {
+    app.use(middleware.requestLogger)
+}
 
 app.use('/info', statusRouter)
 app.use('/api/blogs', blogsRouter)

@@ -168,6 +168,43 @@ describe('when there is initially some blogs saved', () => {
     })
   })
 
+  describe('update of a blog', () => {
+    test('succeeds with status code 200 if id is valid', async () => {
+      const blogsAtStart = await blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+
+      const updatedBlog = {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1
+      }
+      await api
+        .put(`${BASE_URL}/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+
+      const blogsAtEnd = await blogsInDb()
+
+      assert.strictEqual(blogsAtEnd[0].likes, updatedBlog.likes)
+    })
+
+    test('fails with status code 400 if id is invalid', async () => {
+      const invalidId = '5a3d5da59070081a82a3445'
+
+      await api
+        .put(`${BASE_URL}/${invalidId}`)
+        .expect(400)
+    })
+
+    test('fails with status code 400 if body is invalid', async () => {
+      const invalidId = '5a3d5da59070081a82a3445'
+
+      await api
+        .put(`${BASE_URL}/${invalidId}`)
+        .send({})
+        .expect(400)
+    })
+  })
+
 })
 
 after(async () => {
