@@ -34,10 +34,28 @@ const duplicateKeyErrorHandler = (error, request, response, next) => {
     next(error)
 }
 
+const JsonWebTokenErrorHandler = (error, request, response, next) => {
+    logger.error(error.message)
+    if (error.name ===  'JsonWebTokenError') {
+        response.statusMessage = "Invalid Data"
+        return response.status(400).send({ error: error.message })
+    }
+    next(error)
+}
+
+const TokenExpiredErrorHandler = (error, request, response, next) => {
+    logger.error(error.message)
+    if (error.name === 'TokenExpiredError') {
+        return response.status(401).json({error: 'token expired'})
+    }
+    next(error)
+}
+
 module.exports = {
     requestLogger,
     castErrorHandler,
     validationErrorHandler,
     duplicateKeyErrorHandler,
+    JsonWebTokenErrorHandler,
     unknownEndPoint
 }

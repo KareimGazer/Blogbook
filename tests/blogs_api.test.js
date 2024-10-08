@@ -3,6 +3,8 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 const {initialBlogs, nonExistingId, blogsInDb} = require('./test_helper')
 const app = require('../app')
 
@@ -10,14 +12,16 @@ const api = supertest(app)
 const BASE_URL = '/api/blogs'
 
 describe('when there is initially some blogs saved', () => {
+  let USER_ID = ''
   beforeEach(async () => {
-    try {
-      await Blog.deleteMany({})
-      await Blog.insertMany(initialBlogs)
-    }
-    catch ({ message }) {
-      throw new Error(message)
-    }
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'kisho', name: 'kisho', passwordHash })
+    const savedUser = await user.save()
+    USER_ID = savedUser._id
+
+    await Blog.deleteMany({})
+    await Blog.insertMany(initialBlogs)
   })
 
   test('Blogs are returned as json', async () => {
@@ -83,6 +87,7 @@ describe('when there is initially some blogs saved', () => {
         author: "Kisho Tata",
         url: "http://kisho.com",
         likes: 12,
+        userId: USER_ID
       }
 
       await api
@@ -104,6 +109,7 @@ describe('when there is initially some blogs saved', () => {
         author: "Kisho Tata",
         url: "http://kisho.com",
         likes: 7,
+        userId: USER_ID
       }
 
       await api
@@ -121,6 +127,7 @@ describe('when there is initially some blogs saved', () => {
         author: "Kisho Tata",
         title: "The special one",
         likes: 7,
+        userId: USER_ID
       }
 
       await api
@@ -138,6 +145,7 @@ describe('when there is initially some blogs saved', () => {
         title: "The Best of the best",
         author: "Kisho Tata",
         url: "http://kisho.com",
+        userId: USER_ID
       }
 
       await api
