@@ -26,9 +26,18 @@ const validationErrorHandler = (error, request, response, next) => {
     next(error)
 }
 
+const duplicateKeyErrorHandler = (error, request, response, next) => {
+    logger.error(error.message)
+    if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
+        return response.status(400).json({ error: 'expected `username` to be unique' })
+    }
+    next(error)
+}
+
 module.exports = {
     requestLogger,
     castErrorHandler,
     validationErrorHandler,
+    duplicateKeyErrorHandler,
     unknownEndPoint
 }

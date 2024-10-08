@@ -5,12 +5,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 3,
-        unique: true
+        unique: true,
+        validate: {
+            validator: function(v) {
+                return /^[a-zA-Z0-9]+$/.test(v)
+            },
+            message: props => `${props.value} is not a valid username!`
+        }
     },
     name: {
         type: String,
         required: true,
-        minlength: 3
+        minlength: 3,
+        maxlength: 50,
     },
     passwordHash: {
         type: String,

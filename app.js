@@ -40,5 +40,6 @@ app.use('/api/users', usersRouter)
 app.use(middleware.unknownEndPoint)
 app.use(middleware.castErrorHandler)
 app.use(middleware.validationErrorHandler)
+app.use(middleware.duplicateKeyErrorHandler)
 
 module.exports = app
