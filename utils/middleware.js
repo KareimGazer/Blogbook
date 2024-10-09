@@ -24,6 +24,16 @@ const tokenExtractor = (request, response, next) => {
     next()
 }
 
+const userExtractor = (request, response, next) => {
+    const { token } = req
+    const decodedToken = jwt.verify(token, JWT_SECRET)
+    if (!decodedToken.id) {
+        return res.status(401).json({ error: 'token invalid' })
+    }
+    request.userInfo = decodedToken
+    next()
+}
+
 const castErrorHandler = (error, request, response, next) => {
     logger.error(error.message)
     if (error.name === 'CastError') {
@@ -81,5 +91,6 @@ module.exports = {
     JsonWebTokenErrorHandler,
     TokenExpiredErrorHandler,
     tokenExtractor,
+    userExtractor,
     unknownEndPoint
 }

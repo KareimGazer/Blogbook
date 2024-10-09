@@ -20,7 +20,7 @@ loginRouter.post('/', async (request, response) => {
     // only one could suffice
     const userForToken = {
         username: user.username,
-        id: user._id,
+        id: user._id.toString(),
     }
 
     const token = jwt.sign(userForToken, JWT_SECRET, { expiresIn: 60 * 60 })

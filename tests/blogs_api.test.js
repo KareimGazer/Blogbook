@@ -65,7 +65,7 @@ describe('when there is initially some blogs saved', () => {
       assert.deepStrictEqual(resultBlog.body, blogToView)
     })
 
-    test('fails with statuscode 404 if note does not exist', async () => {
+    test('fails with statuscode 404 if blog does not exist', async () => {
       const validNonexistingId = await nonExistingId()
       await api
         .get(`${BASE_URL}/${validNonexistingId}`)
