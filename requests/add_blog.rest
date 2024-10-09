@@ -1,9 +1,0 @@
-POST http://localhost:3000/api/blogs
-Content-Type: application/json
-
-{
-  "title": "What Kisho likes",
-  "author": "Kisho",
-  "url": "www.kisho.com",
-  "likes": 100
-}

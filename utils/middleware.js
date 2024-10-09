@@ -3,9 +3,25 @@ const morgan = require("morgan");
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 const requestLogger = morgan(':method :url :status :res[content-length] - :response-time ms :body')
 
-const unknownEndPoint = (req, res) => {
-    res.statusMessage = "Path Not found"
-    res.status(404)
+const tokenExtractor = (request, response, next) => {
+    let authorization = request.get('authorization')
+    if (authorization) {
+        // Remove surrounding quotes if present
+        if (authorization.startsWith('"') && authorization.endsWith('"')) {
+            authorization = authorization.slice(1, -1)
+        }
+        // Trim any whitespace
+        const trimmedAuth = authorization.trim()
+        if (trimmedAuth.toLowerCase().startsWith('bearer ')) {
+            request.token = trimmedAuth.substring(7).trim()
+        } else {
+            request.token = null
+        }
+    } else {
+        request.token = null
+    }
+
+    next()
 }
 
 const castErrorHandler = (error, request, response, next) => {
@@ -51,11 +67,19 @@ const TokenExpiredErrorHandler = (error, request, response, next) => {
     next(error)
 }
 
+const unknownEndPoint = (request, response, next) => {
+    res.statusMessage = "Path Not found"
+    res.status(404).send({ error: 'unknown endpoint' })
+    next()
+}
+
 module.exports = {
     requestLogger,
     castErrorHandler,
     validationErrorHandler,
     duplicateKeyErrorHandler,
     JsonWebTokenErrorHandler,
+    TokenExpiredErrorHandler,
+    tokenExtractor,
     unknownEndPoint
 }

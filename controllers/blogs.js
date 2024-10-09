@@ -3,15 +3,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 const jwt = require('jsonwebtoken')
-const { SECRET } = require('../utils/config')
-
-const getTokenFrom = (request) => {
-    const authorization = request.get('authorization')
-    if (authorization && authorization.startsWith('Bearer ')) {
-        return authorization.replace('Bearer ', '')
-    }
-    return null
-}
+const { JWT_SECRET } = require('../utils/config')
 
 router.get('/', async (req, res) => {
     const blogs = await Blog.find().populate('user', { username: 1, name: 1 })
@@ -31,9 +23,12 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post("/", async (req, res) => {
-    const decodedToken = jwt.verify(getTokenFrom(request), SECRET)
+    let { token } = req
+    console.log(token)
+    // token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NzA0ZTQ0MmM0MGIyZWZmMjU3MWRkZjYiLCJpYXQiOjE3Mjg0ODUwNjAsImV4cCI6MTcyODQ4ODY2MH0.7mUpZ89e0XOVxrZf4GBlyIIt86cJd_NwNZXZwJGrS5g"
+    const decodedToken = jwt.verify(token, JWT_SECRET)
     if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
+        return res.status(401).json({ error: 'token invalid' })
     }
     
     const { title, author, url, likes } = req.body

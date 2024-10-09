@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/blogs
+Content-Type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NzA0ZTQ0MmM0MGIyZWZmMjU3MWRkZjYiLCJpYXQiOjE3Mjg0ODY4MTcsImV4cCI6MTcyODQ5MDQxN30.t0VgJ0scV2RIFSaOg6-EhsZaCDdnm_6BW_abPONuNO0"
+
+{
+  "title": "welcoming all",
+  "author": "marko",
+  "url": "http://www.kisho.com",
+  "likes": 100
+}

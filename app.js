@@ -1,4 +1,4 @@
-const { PORT, MONGODB_URI } = require('./utils/config')
+const { MONGODB_URI } = require('./utils/config')
 
 const express = require('express')
 // If an exception occurs in an async route,
@@ -34,14 +34,17 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(middleware.requestLogger)
 }
 
-app.use('/info', statusRouter)
-app.use('/api/login', loginRouter)
+app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogsRouter)
+app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
+app.use('/info', statusRouter)
 
-app.use(middleware.unknownEndPoint)
 app.use(middleware.castErrorHandler)
 app.use(middleware.validationErrorHandler)
 app.use(middleware.duplicateKeyErrorHandler)
+app.use(middleware.JsonWebTokenErrorHandler)
+app.use(middleware.TokenExpiredErrorHandler)
+app.use(middleware.unknownEndPoint)
 
 module.exports = app
